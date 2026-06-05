@@ -1,0 +1,10 @@
+FROM vllm/vllm-openai
+#:v0.6.2
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN git clone https://github.com/EleutherAI/lm-evaluation-harness /lm-evaluation-harness
+RUN cd /lm-evaluation-harness && pip install -e .[vllm]
+
+RUN git clone https://github.com/ZubinGou/math-evaluation-harness.git /math-evaluation-harness
+RUN cd /math-evaluation-harness && pip install -r requirements.txt

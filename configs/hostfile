@@ -1,0 +1,14 @@
+127.0.0.1 slots=1
+localhost slots=8
+10.0.1.1 slots=8
+10.0.2.1 slots=8
+10.0.3.1 slots=8
+10.0.5.1 slots=4
+10.0.10.1 slots=8
+10.0.14.1 slots=4
+10.0.9.1 slots=8
+gpu02 slots=8
+gpu03 slots=8
+gpu05 slots=8
+gpu10 slots=8
+gpu14 slots=8
