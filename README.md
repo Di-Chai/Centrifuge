@@ -1,15 +1,14 @@
 # Centrifuge
 
-This is the implementation of "Unlocking Full Efficiency of Token Efficiency in LLM Training"
+This is the implementation of [Unlocking Full Efficiency of Token Efficiency in LLM Training](https://arxiv.org/pdf/2502.00340) ICLR'26.
 
-Paper URL: [https://arxiv.org/pdf/2502.00340](https://arxiv.org/pdf/2502.00340).
+This work proposes an end-to-end system for making token filtering actually fast in real LLM training: it preserves utility-oriented token selection, applies activation filtering in attention backward, and rewrites the computation graph so sparse operations become efficient dimension-reduced dense operations. The result is practical training speedup while keeping model quality gains from token filtering.
 
-This work proposes an end-to-end system for making backward token filtering actually fast in real LLM training: it preserves utility-oriented token selection, applies activation filtering in attention backward, and rewrites the computation graph so sparse operations become efficient dimension-reduced dense operations. The result is practical training speedup while keeping model quality gains from token filtering.
-
-The core hook (enabled via `--attn_filter` in `train.py`):
+For systems already using token filtering, they can be accelerated using one line of code:
 
 ```python
 from grad_filter import token_filter
+
 # After token_filter_loss(...) returns loss and ref_mask:
 token_filter.ops.backward_filter(loss, ref_mask)
 ```
@@ -46,15 +45,10 @@ docker run -it --rm --gpus all --net=host \
   -v ${PROJECT_PATH}:/project \
   -w /project \
   --shm-size=16g --ulimit memlock=-1 \
-  -e HF_ENDPOINT=https://hf-mirror.com \
   --name centrifuge ${DOCKER_IMAGE} bash
 ```
 
-> The `-e HF_ENDPOINT=...` line is only needed when direct `huggingface.co` access is blocked
-> from your host; remove it otherwise. Use `--gpus '"device=0"'` instead of `--gpus all` to
-> pin to a single GPU.
-
-**Why Docker:** Building the filtering operator (`grad_filter`) depends on a specific PyTorch/CUDA toolchain and compiled extensions. All paper experiments were run inside this container. For reproduction and further development, we recommend staying in the same Docker environment rather than installing dependencies on the host.
+Building the filtering operator (`grad_filter`) depends on a specific PyTorch/CUDA toolchain and compiled extensions. All paper experiments were run inside this container. For reproduction and further development, we recommend staying in the same Docker environment rather than installing dependencies on the host.
 
 **Paper testbed (§5.1):** Ubuntu, 8× NVIDIA RTX 3090 (24GB), PyTorch 2.8.0, CUDA 12.8, BF16, gradient accumulation. Exact numbers may vary slightly with the Docker image; use comparable hardware for reproduction.
 
