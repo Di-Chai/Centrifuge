@@ -133,24 +133,11 @@ Backward token filtering uses a **reference model** to score token importance (L
 2. **Build** a tokenized [Open-Web-Math](https://huggingface.co/datasets/open-web-math/open-web-math) corpus with per-token `ref_loss` (`ref_server.py` + `run.sh --task gen-data`).
 3. **Fine-tune** the target model with pre-computed ref loss ([Reproduction → Table 1](#table-1--utility-tinyllama-11b-owm-50-filter)).
 
-The commands below are the scripts for steps 1 and 2.
-
-```mermaid
-sequenceDiagram
-  participant Train as train.py
-  participant Ref as ref_server.py
-  Train->>Ref: token sequences via socket
-  Ref-->>Train: per-token ref_loss
-  Train->>Train: token_filter_loss + backward_filter
-```
-
-
-
 ### Train a reference model
 
 Use the same architecture as the target model. All datasets are public on Hugging Face.
 
-**Single GPU (default for the README):**
+**Single GPU:**
 
 ```bash
 export NODE_RANK=0
