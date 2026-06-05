@@ -1,5 +1,7 @@
 # Centrifuge
 
+This is the implementation of "Unlocking Full Efficiency of Token Efficiency in LLM Training"
+
 Paper URL: [https://arxiv.org/pdf/2502.00340](https://arxiv.org/pdf/2502.00340).
 
 This work proposes an end-to-end system for making backward token filtering actually fast in real LLM training: it preserves utility-oriented token selection, applies activation filtering in attention backward, and rewrites the computation graph so sparse operations become efficient dimension-reduced dense operations. The result is practical training speedup while keeping model quality gains from token filtering.
@@ -11,8 +13,6 @@ from grad_filter import token_filter
 # After token_filter_loss(...) returns loss and ref_mask:
 token_filter.ops.backward_filter(loss, ref_mask)
 ```
-
----
 
 ## Environment
 
@@ -58,8 +58,6 @@ docker run -it --rm --gpus all --net=host \
 
 **Paper testbed (§5.1):** Ubuntu, 8× NVIDIA RTX 3090 (24GB), PyTorch 2.8.0, CUDA 12.8, BF16, gradient accumulation. Exact numbers may vary slightly with the Docker image; use comparable hardware for reproduction.
 
----
-
 ## Quickstart
 
 Minimal path on **one GPU** with `TinyLlama/TinyLlama_v1.1`. Run inside the Docker container above.
@@ -94,8 +92,6 @@ python gen_node_tracing.py --model_path TinyLlama/TinyLlama_v1.1 \
 ```
 
 This additionally writes `tmp/computational_graph_*.svg`.
-
----
 
 ## Support More Models
 
@@ -134,8 +130,6 @@ python gen_node_tracing.py --model_path <ORG/MODEL> \
 ```
 
 We are actively adding first-class support for more model families; the workflow above already works for any PyTorch model whose backward graph can be probed with `add_torch_native_model.py`. Stay tuned for pre-built `target_node_names.yaml` profiles for popular checkpoints.
-
----
 
 ## Reference Model
 
@@ -221,8 +215,6 @@ bash run.sh --task gen-data --output_dir owm_with_ref_loss \
 The cached output (under the run’s `data_cache_dir`, printed in logs) contains tokenized sequences plus `ref_loss`. Training with `--pre_compute_ref` reads this cache automatically when using the same `--output_dir` / cache layout.
 
 For multi-node `gen-data`, set `--ref_socket_hosts` to `ref-node@data-node` and mirror port lists (see [Train](#train)).
-
----
 
 ## Train
 
